@@ -3,7 +3,7 @@ import Track from '../Track/Track'
 import './TrackList.css'
 
 export default function TrackList (props){
-    console.log('tracks',props.tracks)
+
     return(
         <div className="TrackList">
 

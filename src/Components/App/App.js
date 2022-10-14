@@ -3,39 +3,23 @@ import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
+import Spotify from '../../Util/Spotify';
 
 export default class App extends React.Component{
   constructor(props){
     super(props);
 
     this.state={
-      playlistName:'Soul',
-      playlistTracks:[ {id:1,
-        name:'Heaven on Earth',
-        artist: 'PlanetShakers',
-        album: 'Heaven on Earth',
-        uri:""
-        }],
-      searchResults:[
-        {id:1001,
-          name:'Joyful',
-          artist: 'Dante Bowe',
-          album: 'Joyful',
-          uri:""
-          },
-          {id:1002,
-            name:'I speak Jesus',
-            artist: 'Passion Music',
-            album: 'Passion Live',
-            uri:""
-            }
-        ]
+      playlistName:'New Playlist',
+      playlistTracks:[],
+      searchResults:[]
       }
 
       this.addTrack = this.addTrack.bind(this)
       this.removeTrack = this.removeTrack.bind(this)
       this.updatePlaylistName = this.updatePlaylistName.bind(this)
       this.savePlaylist = this.savePlaylist.bind(this)
+      this.search = this.search.bind(this)
   }
 
   addTrack(newTrack){
@@ -65,16 +49,26 @@ export default class App extends React.Component{
   }
 
   savePlaylist(){
-    return this.state.playlistTracks.map(track=>track.uri)
+     if(Spotify.savePlaylist(this.state.playlistName,  this.state.playlistTracks.map(track=>track.uri))){
+      this.setState({ playlistTracks:[]})
+      this.setState({playlistName:'New Playlist'})
+     }else{
+      alert(`Something went wrong!`)
+     }
   }
 
-  render(){
+  search(searchTerm){
+    Spotify.search(searchTerm).then(tracks=>this.setState({searchResults: tracks}))
+  }
 
+
+  render(){
+  
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar/>
+          <SearchBar onSearch={this.search}/>
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack}/>
             <Playlist playlistTracks={this.state.playlistTracks} playlistName={this.state.playlistName} 

@@ -14,9 +14,6 @@ export default class Playlist extends React.Component{
     this.props.onNameChange(event.target.value)
   }
 
-  handlePlaylistSave(){
-
-  }
 
   render(){
     return(
